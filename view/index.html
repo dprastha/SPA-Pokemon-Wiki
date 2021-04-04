@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+   <!-- Required meta tags -->
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+   <!-- Bootstrap CSS -->
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+
+   <!-- Google Font -->
+   <link rel="preconnect" href="https://fonts.gstatic.com">
+   <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
+
+   <!-- Vue CDN -->
+   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+   <!-- Bootstrap Vue -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-vue/2.21.2/bootstrap-vue.min.js"
+      integrity="sha512-Z0dNfC81uEXC2iTTXtE0rM18I3ATkwn1m8Lxe0onw/uPEEkCmVZd+H8GTeYGkAZv50yvoSR5N3hoy/Do2hNSkw=="
+      crossorigin="anonymous"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-vue/2.21.2/bootstrap-vue-icons.common.js"
+      integrity="sha512-1JotZA+Yp2KTsv3oZUMaoStKXHJbfOoOCFIVw6NjNIhbLXRYgPfHlnfCZELZSa7Pl2gERROUiVjn6goWxnh5vA=="
+      crossorigin="anonymous"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-vue/2.21.2/bootstrap-vue-icons.common.min.js"
+      integrity="sha512-+e+Co6xInJyWHIqLkhtaBPxFk+RU1bt/ajG/x5l7UuPiPH9n9gwxmfAtTSkX30JM2dZMoM1KXKjNucsrQrS7cQ=="
+      crossorigin="anonymous"></script>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-vue/2.21.2/bootstrap-vue-icons.css"
+      integrity="sha512-ofvNcyNADx27Xw9edhhecFoL1M+QamynjUyIDVrkLYemVgvWpT5jMA4box8FFaH+umvQyGEDAHyv1CGpmP8NGw=="
+      crossorigin="anonymous" />
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-vue/2.21.2/bootstrap-vue.min.css"
+      integrity="sha512-YnP4Ql71idaMB+/ZG38+1adSSQotdqvixQ+dQg8x/IFA4heIj6i0BC31W5T5QUdK1Uuwa01YdqdcT42q+RldAg=="
+      crossorigin="anonymous" />
+
+   <title>Pokemon Wiki</title>
+   <style>
+      body {
+         background: url(https://vignette.wikia.nocookie.net/pokemongo/images/6/6a/WikiWrapper_Left.png/) fixed no-repeat left center, url(https://vignette.wikia.nocookie.net/pokemongo/images/4/47/WikiWrapper_Right.png/) fixed no-repeat right center, linear-gradient(90deg, #35908f 10%, #a8e090 50%, #35908f 90%) fixed !important;
+         background-size: contain !important;
+         font-family: 'Oswald', sans-serif;
+      }
+
+      .navbar,
+      footer {
+         background-color: rgba(61, 148, 61);
+      }
+
+      .card {
+         transition: .3s;
+      }
+
+      .card:hover {
+         transform: scale(1.05);
+      }
+
+      .list {
+         background-color: rgba(168, 224, 144, 0.8);
+      }
+
+      .kanto {
+         background-color: darkgreen;
+      }
+
+      footer {
+         margin-bottom: -1rem;
+      }
+
+      /* Page */
+      .show_kanto {
+         display: block;
+      }
+
+      .none_kanto {
+         display: none;
+      }
+
+      .show_johto {
+         display: block;
+      }
+
+      .none_johto {
+         display: none;
+      }
+
+      .show_hoenn {
+         display: block;
+      }
+
+      .none_hoenn {
+         display: none;
+      }
+   </style>
+</head>
+
+<body>
+   <!-- Navbar -->
+   <nav class="navbar navbar-expand-lg navbar-light shadow-sm fixed-top">
+      <div class="container-fluid">
+         <a class="navbar-brand fw-bold fs-4" href="#">
+            <img src="https://pngimg.com/uploads/pokeball/pokeball_PNG24.png" alt="" width="40" height="40"
+               class="d-inline-block align-text-top ">
+            Pokemon Wiki
+         </a>
+         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+         </button>
+         <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+               <li class="nav-item ">
+                  <a class="nav-link active fs-4" aria-current="page" href="#">Community</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link active fs-4" href="#">Guide</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link active fs-4" href="#">Event</a>
+               </li>
+               <li class="nav-item">
+                  <button class="btn btn-outline-success me-2 fs-4 bg-dark" type="button">Sign Up</button>
+               </li>
+            </ul>
+         </div>
+      </div>
+   </nav>
+
+   <div class="container" id="app">
+      <div class="row mt-5">
+         <div class="col-lg">
+            <section class="py-5 text-center container">
+               <div>
+                  <b-carousel id="carousel-1" v-model="slide" :interval="4000" controls indicators background="#ababab"
+                     img-width="1024" img-height="480" style="text-shadow: 1px 1px 2px #333;"
+                     @sliding-start="onSlideStart" @sliding-end="onSlideEnd">
+                     <!-- Text slides with image -->
+                     <div v-for="carousel in carousels">
+                        <b-carousel-slide :caption="carousel.name" :img-src="carousel.url_pict">
+                        </b-carousel-slide>
+                     </div>
+                  </b-carousel>
+               </div>
+            </section>
+         </div>
+      </div>
+      <!-- Cards -->
+      <section class="list rounded">
+         <!-- Button -->
+         <div class="row justify-content-center">
+            <div class="col-lg">
+               <div class="btn-group d-flex justify-content-center " role="group" aria-label="Basic example">
+                  <button v-on:click="kantoCall()" type="button"
+                     class="btn btn-primary fs-3 border border-3">Kanto</button>
+                  <button v-on:click="johtoCall()" type=" button"
+                     class="btn btn-warning fs-3 border border-3">Johto</button>
+                  <button v-on:click="hoennCall()" type=" button"
+                     class="btn btn-danger fs-3 border border-3">Hoenn</button>
+               </div>
+            </div>
+         </div>
+
+         <!-- Kanto -->
+         <section :class="style_kanto">
+            <div class="row justify-content-center py-5">
+               <h1 class="fw-bold text-center text-primary">Kanto</h1>
+               <div class="col-lg-6 my-3" v-for="kanto in kantos" style="width: 18rem;">
+                  <div class="card rounded shadow border border-dark">
+                     <img :src="kanto.url_pict" class="card-img-top" :alt="kanto.name">
+                     <div class="card-body ">
+                        <p class="card-text fs-5">Name : {{kanto.name}}</p>
+                        <p class="card-text fs-5">Element : {{kanto.element}}</p>
+                     </div>
+                  </div>
+               </div>
+         </section>
+         <!-- Kanto End -->
+
+         <!-- Johto -->
+         <section :class="style_johto">
+            <div class="row justify-content-center py-5">
+               <h1 class="fw-bold text-center text-warning">Johto</h1>
+               <div class="col-lg-6 my-3" v-for="johto in johtos" style="width: 18rem;">
+                  <div class="card rounded shadow border border-dark">
+                     <img :src="johto.url_pict" class="card-img-top" :alt="johto.name">
+                     <div class="card-body ">
+                        <p class="card-text fs-5">Name : {{johto.name}}</p>
+                        <p class="card-text fs-5">Element : {{johto.element}}</p>
+                     </div>
+                  </div>
+               </div>
+         </section>
+         <!-- Johto End -->
+
+         <!-- Johto -->
+         <section :class="style_hoenn">
+            <div class="row justify-content-center py-5">
+               <h1 class="fw-bold text-center text-danger">Hoenn</h1>
+               <div class="col-lg-6 my-3" v-for="hoenn in hoenns" style="width: 18rem;">
+                  <div class="card rounded shadow border border-dark">
+                     <img :src="hoenn.url_pict" class="card-img-top" :alt="hoenn.name">
+                     <div class="card-body ">
+                        <p class="card-text fs-5">Name : {{hoenn.name}}</p>
+                        <p class="card-text fs-5">Element : {{hoenn.element}}</p>
+                     </div>
+                  </div>
+               </div>
+         </section>
+         <!-- Johto End -->
+
+         <!-- Card End -->
+      </section>
+   </div>
+
+   <footer>
+      <p class="text-dark text-center p-3 mt-5 fs-4">
+         Created with ❤ by <a href="https://www.instagram.com/danielprasthaa/" class="text-dark fw-bold">Daniel
+            Prastha</a>
+      </p>
+   </footer>
+
+   <!-- Script -->
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous">
+   </script>
+   <!-- Vue JS -->
+   <script>
+      var app = new Vue({
+         el: '#app',
+         data: {
+            carousels: [],
+            kantos: [],
+            johtos: [],
+            hoenns: [],
+            style_kanto: 'show_kanto',
+            style_johto: 'none_johto',
+            style_hoenn: 'none_hoenn',
+            slide: 0,
+            sliding: null
+         },
+         mounted: function () {
+            this.startSlide();
+            this.upDate_news();
+         },
+         methods: {
+            onSlideStart(slide) {
+               this.sliding = true
+            },
+            onSlideEnd(slide) {
+               this.sliding = false
+            },
+            kantoCall: function () {
+               this.style_kanto = 'show_kanto';
+               this.style_johto = 'none_johto';
+               this.style_hoenn = 'none_hoenn';
+               axios.get('http://localhost:5000/kanto').then(response => this.kantos = response.data);
+            },
+            johtoCall: function () {
+               this.style_kanto = 'none_kanto';
+               this.style_johto = 'show_johto';
+               this.style_hoenn = 'none_hoenn';
+               axios.get('http://localhost:5000/johto').then(response => this.johtos = response.data);
+            },
+            hoennCall: function () {
+               this.style_kanto = 'none_kanto';
+               this.style_johto = 'none_johto';
+               this.style_hoenn = 'show_hoenn';
+               axios.get('http://localhost:5000/johto').then(response => this.johtos = response.data);
+            },
+            updateKanto: function () {
+               axios.get('http://localhost:5000/kanto').then(response => this.kantos = response
+                  .data);
+            },
+            updateJohto: function () {
+               axios.get('http://localhost:5000/johto').then(response => this.johtos = response
+                  .data);
+            },
+            updateHoenn: function () {
+               axios.get('http://localhost:5000/hoenn').then(response => this.hoenns = response.data);
+            }
+         },
+         mounted() {
+            axios.get('http://localhost:5000/kanto').then(response => this.kantos = response.data);
+            axios.get('http://localhost:5000/carousel').then(response => this.carousels = response.data);
+
+            // Update
+            this.updateKanto();
+            this.timer = setInterval(this.updateKanto, 3000);
+            this.updateJohto();
+            this.timer = setInterval(this.updateJohto, 3000);
+            this.updateHoenn();
+            this.timer = setInterval(this.updateHoenn, 3000);
+         }
+      });
+   </script>
+</body>
+
+</html>

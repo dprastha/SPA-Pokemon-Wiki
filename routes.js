@@ -1,11 +1,16 @@
-const express = require("express")
+const express = require("express");
 const Carousel = require('./models/Carousel');
 const Kanto = require('./models/Kanto');
 const Johto = require('./models/Johto');
 const Hoenn = require("./models/hoenn");
 const router = express.Router();
 var path = require('path');
+const e = require("express");
 
+// * Admin
+router.get('/admin', async (req, res) => {
+   res.sendFile(path.join(__dirname + '/view/admin_dashboard.html'));
+});
 
 // * Kanto
 // Get all data
@@ -27,6 +32,53 @@ router.post('/kanto', async (req, res) => {
    });
    await kanto.save();
    res.send(kanto);
+});
+
+// Get one data
+router.get('/kanto/:id', async (res, req) => {
+   try {
+      const kanto = await Kanto.findOne({ _id: req.params.id });
+      res.send(kanto);
+   } catch {
+      res.status(404);
+      res.send({ error: "Post doesn't exist!" });
+   }
+});
+
+// Update
+router.patch('/kanto/:id', async (req, res) => {
+   try {
+      const kanto = await Kanto.findOne({ _id: req.params.id });
+
+      if (req.body.name) {
+         kanto.name = req.body.name;
+      }
+
+      if (req.body.element) {
+         kanto.element = req.body.element;
+      }
+
+      if (req.body.url_pict) {
+         kanto.url_pict = req.body.url_pict;
+      }
+
+      await kanto.save();
+      res.send(kanto);
+   } catch (error) {
+      req.status(404);
+      req.send({ error: "Post doesn't exist!" });
+   }
+});
+
+// Delete
+router.delete('/kanto/:id', async (req, res) => {
+   try {
+      await Kanto.deleteOne({ _id: req.params.id });
+      res.status(204).send();
+   } catch {
+      res.status(404);
+      res.send({ error: "Post doesn't exist!" });
+   }
 });
 
 // * Johto
@@ -52,7 +104,7 @@ router.post('/johto', async (req, res) => {
 router.get('/hoenn', async (req, res) => {
    const hoenn = await Hoenn.find();
    res.send(hoenn);
-})
+});
 
 // Post
 router.post('/hoenn', async (req, res) => {

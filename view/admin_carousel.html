@@ -66,11 +66,11 @@
           <div class="position-sticky pt-3">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="http://localhost:5000/admin/carousel">
+                <a class="nav-link active" aria-current="page" href="http://localhost:5000/admin/carousel">
                   <span data-feather="home"></span>
                   Data Carousels
                 </a>
-                <a class="nav-link active" aria-current="page" href="http://localhost:5000/admin/">
+                <a class="nav-link" aria-current="page" href="http://localhost:5000/admin/">
                   <span data-feather="home"></span>
                   Data Kanto
                 </a>
@@ -88,17 +88,17 @@
         </nav>
 
         <main id="app" class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-          <h2>Data Kantos</h2>
+          <h2>Data Carousels</h2>
 
           <!-- Button trigger insert modal -->
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#insertModal">Insert Kantos</button>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#insertModal">Insert Carousels</button>
 
           <!-- Insert Modal -->
           <div class="modal fade" id="insertModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Tambah Data Kanto</h5>
+                  <h5 class="modal-title" id="exampleModalLabel">Tambah Data Carousel</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body-insert px-3">
@@ -106,10 +106,6 @@
                     <div class="mb-3">
                       <label for="name" class="form-label">name</label>
                       <input v-model="input_name" type="text" class="form-control" id="name" />
-                    </div>
-                    <div class="mb-3">
-                      <label for="element" class="form-label">element Kantos</label>
-                      <input v-model="input_element" type="text" class="form-control" id="element" />
                     </div>
                     <div class="mb-3">
                       <label for="url_pict" class="form-label">URL pict</label>
@@ -130,7 +126,7 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Edit Data Kanto</h5>
+                  <h5 class="modal-title" id="exampleModalLabel">Edit Data Carousel</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body-insert px-3">
@@ -142,10 +138,6 @@
                     <div class="mb-3">
                       <label for="editName" class="form-label">Name</label>
                       <input v-model="edit_name" type="text" class="form-control" id="editName" />
-                    </div>
-                    <div class="mb-3">
-                      <label for="editElement" class="form-label">Element Kantos</label>
-                      <input v-model="edit_element" type="text" class="form-control" id="editElement" />
                     </div>
                     <div class="mb-3">
                       <label for="editUrlPict" class="form-label">URL Picture</label>
@@ -168,18 +160,16 @@
                 <tr>
                   <th>No</th>
                   <th>Name</th>
-                  <th>Element</th>
                   <th>Picture</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(kanto,item) in kantos">
+                <tr v-for="(carousel,item) in carousels">
                   <td>{{item+1}}</td>
-                  <td>{{kanto.name}}</td>
-                  <td>{{kanto.element}}</td>
+                  <td>{{carousel.name}}</td>
                   <td>
-                    <img :src="kanto.url_pict" :alt="kanto.name" style="width: 60px" />
+                    <img :src="carousel.url_pict" :alt="carousel.name" style="width: 60px" />
                   </td>
                   <td>
                     <button v-on:click="edit_data(item)" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editModal">Edit</button>
@@ -197,7 +187,7 @@
       var vm = new Vue({
         el: "#app",
         data: {
-          kantos: [],
+          carousels: [],
           input_name: "",
           input_element: "",
           input_pict: "",
@@ -209,38 +199,37 @@
         mounted: function () {},
         methods: {
           insert_to_db() {
-            axios.post("http://localhost:5000/kanto", {
+            axios.post("http://localhost:5000/carousel", {
               name: this.input_name,
               element: this.input_element,
               url_pict: this.input_pict,
             });
           },
           edit_data(urutan) {
-            this.edit_id = this.kantos[urutan]._id;
-            this.edit_name = this.kantos[urutan].name;
-            this.edit_element = this.kantos[urutan].element;
-            this.edit_pict = this.kantos[urutan].url_pict;
+            this.edit_id = this.carousels[urutan]._id;
+            this.edit_name = this.carousels[urutan].name;
+            this.edit_pict = this.carousels[urutan].url_pict;
           },
           patch_data() {
-            axios.patch("http://localhost:5000/kanto/" + this.edit_id, {
+            axios.patch("http://localhost:5000/carousel/" + this.edit_id, {
               name: this.edit_name,
               element: this.edit_element,
               url_pict: this.edit_pict,
             });
           },
           delete_data(urutan) {
-            let data_hapus = this.kantos[urutan]._id;
-            axios.delete("http://localhost:5000/kanto/" + data_hapus, {});
+            let data_hapus = this.carousels[urutan]._id;
+            axios.delete("http://localhost:5000/carousel/" + data_hapus, {});
           },
-          updateKanto: function () {
+          updateCarousel: function () {
             var token_ls = localStorage.getItem("token_app");
             axios
-              .get("http://localhost:5000/kanto", {
+              .get("http://localhost:5000/carousel", {
                 headers: {
                   "auth-token": token_ls,
                 },
               })
-              .then((response) => (this.kantos = response.data));
+              .then((response) => (this.carousels = response.data));
           },
           cek_refreshtoken: function () {
             axios
@@ -258,9 +247,9 @@
           },
         },
         mounted() {
-          axios.get("http://localhost:5000/kanto").then((response) => (this.kantos = response.data));
-          this.updateKanto();
-          setInterval(this.updateKanto, 1000);
+          axios.get("http://localhost:5000/carousel").then((response) => (this.carousels = response.data));
+          this.updateCarousel();
+          setInterval(this.updateCarousel, 1000);
 
           axios
             .post("http://localhost:5000/cek_page", {
@@ -273,7 +262,7 @@
             });
 
           //== hitung mundur untuk refresh token
-          setInterval(this.cek_refreshtoken, 7000000); // 7 detik
+          setInterval(this.cek_refreshtoken, 7000); // 7 detik
         },
       });
     </script>

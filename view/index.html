@@ -183,7 +183,7 @@
          <section :class="style_johto">
             <div class="row justify-content-center py-5">
                <h1 class="fw-bold text-center text-warning">Johto</h1>
-               <div class="col-lg-6 my-3" v-for="johto in johtos" style="width: 18rem;">
+               <div class="col-lg-6 my-3" v-for="johto in johtos" v-bind:key="johto.id" style="width: 18rem;">
                   <div class="card rounded shadow border border-dark">
                      <img :src="johto.url_pict" class="card-img-top" :alt="johto.name">
                      <div class="card-body ">
@@ -271,15 +271,33 @@
                axios.get('http://localhost:5000/johto').then(response => this.johtos = response.data);
             },
             updateKanto: function () {
-               axios.get('http://localhost:5000/kanto').then(response => this.kantos = response
+               var token_ls = localStorage.getItem("token_app");
+               axios.get('http://localhost:5000/kanto', {
+                  headers: {
+                  "auth-token": token_ls,
+                  },
+               })
+               .then(response => this.kantos = response
                   .data);
             },
             updateJohto: function () {
-               axios.get('http://localhost:5000/johto').then(response => this.johtos = response
+               var token_ls = localStorage.getItem("token_app");
+               axios.get('http://localhost:5000/johto', {
+                  headers: {
+                  "auth-token": token_ls,
+                  },
+               })
+               .then(response => this.johtos = response
                   .data);
             },
             updateHoenn: function () {
-               axios.get('http://localhost:5000/hoenn').then(response => this.hoenns = response.data);
+               var token_ls = localStorage.getItem("token_app");
+               axios.get('http://localhost:5000/hoenn', {
+                  headers: {
+                  "auth-token": token_ls,
+                  },
+               })
+               .then(response => this.hoenns = response.data);
             }
          },
          mounted() {
